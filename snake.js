@@ -32,9 +32,8 @@ function draw() {
   		dropFood();
   		
   		//do collision detection here
-  		ateFood();
-
   		step();
+  		ateFood();
 	}
 }
 
@@ -120,7 +119,7 @@ function deltaX(){
 
 function addOneSectionToSnake(){
 	//this will add the same direction to the end so theyre in the same direction
-	snakeSections.push(snakeSections[snakeSections.length - 1]);
+	snakeSections.push(snakeSections[snakeSections.length - 1]);	
 }
 
 function refreshPage(){
@@ -159,26 +158,13 @@ function initializeGame(){
 
 	direction = -1;
 
-	//foodX = int(random(0, width-10));
-	//foodY = int(random(0, height-10));
-
 	foodX = formatSuitableNumber();
 	foodY = formatSuitableNumber();
-
-
 }
 
 function snakePart(){
 	snakeX = formatSuitableNumber();
 	snakeY = formatSuitableNumber();
-
-	//this.getX = function(){
-	//	snakeX = formatSuitableNumber();
-	//}
-
-	//this.getY = function(){
-	//	snakeY = formatSuitableNumber();
-	//}
 }
 
 function keyPressed() {
@@ -209,103 +195,92 @@ function stopGame(endGame){
 		print("You lost");
 		print("SnakeX: " + snakeX);
 		print("SnakeY: " + snakeY);
+		print("Size: " + snakeSections.length);
 		print("");
 	}
 
 	noLoop();
-	//initializeGame();
 }
 
 function step(){
-	//here we might have to loop through an array and reprint everything with updated coordinates
+	//new game loop
+	updateArray();		
 
+		if (snakeSections[0] == 0 && posX > 0){
+		  	//move left, Xvar - stepSize
+		  	posX -= stepSize;
 
-	//here we'll have to go through the array of snakeParts	
-	//on each index we need to add another rectangle 
-	for (var x = 0; x < snakeSections.length; x++){		
-		//if (x == 0){
-			//posX = snakeX;
-			//posY = snakeY;
-		//}
-		//else{
+		}
+		else if (snakeSections[0] == 1 && posX < width-10){
+		  	//move right, Xvar + stepSize
+		  	posX += stepSize;
+		}
+		else if (snakeSections[0] == 2 && posY > 0){
+		  	//move up, Yvar - stepSize
+		  	posY -= stepSize;
+		}
+		else if (snakeSections[0] == 3 && posY < height-10){
+		  	//move down, Yvar + stepSize
+		  	posY += stepSize;
+		}
+		else{
+		  	//pause the game since it's over, the snake would go outside of the boarders
+		 	if (snakeSections[0] >= 0){
+		  		endGame = true;
+		  		stopGame(endGame);
+		  		return;
+			}	  	
+		}
 
-			/*
-			if (direction == 0 && posX > 0){
+		fill(255, 255, 255);		
+		
+		rect(posX, posY, snakeSize, snakeSize);
+
+		var currX = posX; 
+		var currY = posY;
+
+	if (snakeSections.length > 1){
+		for (var x = 0; x < snakeSections.length; x++){
+			//loop through the rest of the snake and print the correct layout
+			if (snakeSections[x] == 0 && currX > 0){
 			  	//move left, Xvar - stepSize
-			  	posX -= stepSize;
+			  	currX += stepSize;
 
 			}
-			else if (direction == 1 && posX < width-10){
+			else if (snakeSections[x] == 1 && currX < width-10){
 			  	//move right, Xvar + stepSize
-			  	posX += stepSize;
+			  	currX -= stepSize;
 			}
-			else if (direction == 2 && posY > 0){
+			else if (snakeSections[x] == 2 && currY > 0){
 			  	//move up, Yvar - stepSize
-			  	posY -= stepSize;
+			  	currY += stepSize;
 			}
-			else if (direction == 3 && posY < height-10){
+			else if (snakeSections[x] == 3 && currY < height-10){
 			  	//move down, Yvar + stepSize
-			  	posY += stepSize;
+			  	currY -= stepSize;
 			}
-			else{
-			  	//pause the game since it's over, the snake would go outside of the boarders
-			 	if (direction >= 0){
-			  		endGame = true;
-			  		stopGame(endGame);
-			  		return;
-				}	  	
-			}
-			*/
 
-			//new test
-			if (snakeSections[x] == 0 && posX > 0){
-			  	//move left, Xvar - stepSize
-			  	posX -= stepSize;
+			if (snakeSections.length == 10){
+				var test = "";
+			}
+			fill(150, 150, 150);
 
-			}
-			else if (snakeSections[x] == 1 && posX < width-10){
-			  	//move right, Xvar + stepSize
-			  	posX += stepSize;
-			}
-			else if (snakeSections[x] == 2 && posY > 0){
-			  	//move up, Yvar - stepSize
-			  	posY -= stepSize;
-			}
-			else if (snakeSections[x] == 3 && posY < height-10){
-			  	//move down, Yvar + stepSize
-			  	posY += stepSize;
-			}
-			else{
-			  	//pause the game since it's over, the snake would go outside of the boarders
-			 	if (snakeSections[x] >= 0){
-			  		endGame = true;
-			  		stopGame(endGame);
-			  		return;
-				}	  	
-			}
-		//}
-		fill(255, 255, 255);
-		var currX, currY;
+		    rect(currX, currY, snakeSize, snakeSize);
 
-	    rect(posX, posY, snakeSize, snakeSize);
-	}	  
-
-	updateArray();
+		}
+	}			
 }
 
 function updateArray(){
+	//this should change the posX and posY
 	if(snakeSections.length > 1){
-		for(var x = snakeSections.length; x > 0; x--){
-			if (x == snakeSections.length){
-				snakeSections.pop();	
+		for(var x = snakeSections.length - 1; x > 0; x--){
+			if (snakeSections.length > 15){
+				var w = 0;
 			}
-			else{
 				snakeSections[x] = snakeSections[x - 1]
-			}
-
-		}		
+		}	
 	}
-
 	snakeSections[0] = direction;
 }
 
