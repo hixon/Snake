@@ -285,7 +285,7 @@ function updateArray(){
 }
 
 function formatSuitableNumber(){
-	var number = int(random(0, width-10));
+	var number = int(random(10, width-20));
 
 	if (number % 10 >= 5){
 		number += 10 - number % 10;
