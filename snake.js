@@ -1,12 +1,12 @@
 var newGame = true;
 
 var snakeX, snakeY;
-var snakeSize = 10;
+var snakeSize = 15;
 var direction = -1;
 
 var endGame = false;
 
-var stepSize = 5;
+var stepSize = 7;
 
 var foodX, foodY;
 
@@ -119,7 +119,8 @@ function deltaX(){
 
 function addOneSectionToSnake(){
 	//this will add the same direction to the end so theyre in the same direction
-	snakeSections.push(snakeSections[snakeSections.length - 1]);	
+	snakeSections.push(snakeSections[snakeSections.length - 1]);
+	document.getElementById("score").innerText = "Current snake size: " + snakeSections.length;	
 }
 
 function refreshPage(){
@@ -197,6 +198,7 @@ function stopGame(endGame){
 		print("SnakeY: " + snakeY);
 		print("Size: " + snakeSections.length);
 		print("");
+		document.getElementById("score").innerText = "Snake size before you died: " + snakeSections.length;
 	}
 
 	noLoop();
